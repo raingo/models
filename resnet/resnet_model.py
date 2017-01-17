@@ -55,11 +55,11 @@ class ResNet(object):
 
   def build_graph(self):
     """Build a whole graph for the model."""
-    self.global_step = tf.Variable(0, name='global_step', trainable=False)
+    self.global_step = tf.contrib.framework.get_or_create_global_step()
     self._build_model()
     if self.mode == 'train':
       self._build_train_op()
-    self.summaries = tf.merge_all_summaries()
+    self.summaries = tf.summary.merge_all()
 
   def _stride_arr(self, stride):
     """Map a stride scalar to the stride array for tf.nn.conv2d."""
@@ -122,12 +122,12 @@ class ResNet(object):
       self.cost = tf.reduce_mean(xent, name='xent')
       self.cost += self._decay()
 
-      tf.scalar_summary('cost', self.cost)
+      tf.summary.scalar('cost', self.cost)
 
   def _build_train_op(self):
     """Build training specific ops for the graph."""
     self.lrn_rate = tf.constant(self.hps.lrn_rate, tf.float32)
-    tf.scalar_summary('learning rate', self.lrn_rate)
+    tf.summary.scalar('learning rate', self.lrn_rate)
 
     trainable_variables = tf.trainable_variables()
     grads = tf.gradients(self.cost, trainable_variables)
@@ -225,7 +225,7 @@ class ResNet(object):
 
   def _bottleneck_residual(self, x, in_filter, out_filter, stride,
                            activate_before_residual=False):
-    """Bottleneck resisual unit with 3 sub layers."""
+    """Bottleneck residual unit with 3 sub layers."""
     if activate_before_residual:
       with tf.variable_scope('common_bn_relu'):
         x = self._batch_norm('init_bn', x)
