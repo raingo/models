@@ -185,8 +185,10 @@ def vgg_16(inputs,
             in slim.utils.convert_collection_to_dict(end_points_collection).items()}
 
         if spatial_squeeze:
+          fc7 = tf.squeeze(end_points['fc7'], [1,2])
+          end_points['fc7_s'] = fc7
           net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
-          end_points['fc8'] = net
+          end_points['fc8_s'] = net
         return net, end_points
 vgg_16.default_image_size = 224
 
@@ -231,8 +233,10 @@ def vgg_16a(inputs,
         end_points = {_strip_prefix(k, sc):v for k, v
             in slim.utils.convert_collection_to_dict(end_points_collection).items()}
         if spatial_squeeze:
+          fc7 = tf.squeeze(end_points['fc7'], [1,2])
+          end_points['fc7_s'] = fc7
           net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
-          end_points['fc8'] = net
+          end_points['fc8_s'] = net
         return net, end_points
 vgg_16.default_image_size = 224
 
