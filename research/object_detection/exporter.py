@@ -399,7 +399,7 @@ def export_inference_graph(input_type,
                            trained_checkpoint_prefix,
                            output_directory,
                            input_shape=None,
-                           optimize_graph=True,
+                           optimize_graph=False,
                            output_collection_name='inference_op',
                            additional_output_tensor_names=None):
   """Exports inference graph for the model specified in the pipeline config.
